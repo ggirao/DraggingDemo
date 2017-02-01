@@ -31,9 +31,30 @@ class ViewController: UIViewController {
         
         let translation = gesture.translation(in: self.view)
         let label = gesture.view!
+        
         label.center = CGPoint(x: self.view.bounds.width / 2 + translation.x, y: self.view.bounds.height / 2 + translation.y)
         
+        let xFromCenter = label.center.x - self.view.bounds.width / 2
+        
+        let scale = min(100 / abs(xFromCenter), 1)
+        
+        var rotation = CGAffineTransform(rotationAngle: xFromCenter / 200)
+        var stretchAndRotate = rotation.scaledBy(x: scale, y: scale)
+        
+        label.transform = stretchAndRotate
         if gesture.state == UIGestureRecognizerState.ended {
+            
+            if label.center.x < 100 {
+                print(("Not chosen"))
+            } else if label.center.x > self.view.bounds.width - 100 {
+                print("Chosen")
+            }
+            
+            rotation = CGAffineTransform(rotationAngle: 0)
+            
+            stretchAndRotate = rotation.scaledBy(x: 1, y: 1)
+            
+            label.transform = stretchAndRotate
             
             label.center = CGPoint(x: self.view.bounds.width / 2, y: self.view.bounds.height / 2)
             
